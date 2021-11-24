@@ -34,3 +34,5 @@ blocks:
         - name: Kubernetes deployment
           commands:
             - kubectl apply -f  ../deployment.yaml
+
+            
