@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: "gcr.io/searce-playground/semaphore-example@sha256:b1b86c9a3b96b1b09816785c6345152ac2c4fc5adb177973774955363ed517b4"
+        ports:
+        - containerPort: 80

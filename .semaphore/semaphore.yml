@@ -1,22 +1,28 @@
-version: v1.0
-name: Initial Pipeline
-agent:
-  machine:
-    type: e1-standard-2
-    os_image: ubuntu2004
+version: "v1.0"
+name: First pipeline example
 blocks:
-  - name: push_image
+  - name: "Push Image"
     task:
-      jobs:
-        - name: 'Job #1'
-          commands:
-            - 'docker build -t gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7} .'
-            - 'docker push gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}'
       secrets:
         - name: GCP
+        - name: KUBECONFIG
+      env_vars:
+        - name: KUBECONFIG
+          value: /home/semaphore/.kube/dok8s.yaml
       prologue:
         commands:
-          - gcloud auth activate-service-account --key-file=.secrets/key.json
+          # Authenticate using the file injected from the secret
+          - gcloud auth activate-service-account --key-file=.secrets/gcp.json
+          # Don't forget -q to silence confirmation prompts
           - gcloud auth configure-docker -q
           - checkout
-    
+      jobs:
+        - name: Docker build
+          commands:
+            # Replace with your GCP Project ID
+            - docker build -t "gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}" .
+            - docker push "gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}"
+        - name: Kubernetes deployment
+          commands:
+            - kubectl apply -f  ../deployment.yaml
+            
