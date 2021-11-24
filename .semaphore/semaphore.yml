@@ -1,0 +1,21 @@
+version: v1.0
+name: Initial Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: push_image
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - 'docker build -t gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7} .'
+            - 'docker push gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}'
+      secrets:
+        - name: GCP
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets/key.json
+          - gcloud auth configure-docker -q
+          - checkout
