@@ -19,3 +19,4 @@ blocks:
           - gcloud auth activate-service-account --key-file=.secrets/key.json
           - gcloud auth configure-docker -q
           - checkout
+    
