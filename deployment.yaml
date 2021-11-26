@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: "gcr.io/searce-playground/semaphore-example:LATEST"
+        image: "gcr.io/searce-playground/semaphore-trainual:LATEST"
         ports:
         - containerPort: 80
