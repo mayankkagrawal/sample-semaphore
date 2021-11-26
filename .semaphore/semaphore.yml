@@ -8,7 +8,7 @@ blocks:
   - name: "Push Image"
     task:
       secrets:
-       - name: GKE
+       - name: GCP
       env_vars:
         - name: CLUSTER_US
           value: varsha-test-gke
