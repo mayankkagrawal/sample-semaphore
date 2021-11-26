@@ -32,6 +32,6 @@ blocks:
              - docker push "gcr.io/searce-playground/semaphore-trainual:${SEMAPHORE_GIT_SHA:0:7}"
          - name: Kubernetes deployment
            commands:
-            - kubectl apply -f  ns.yaml
+            # - kubectl apply -f  ns.yaml
             - kubectl apply -f  deployment.yaml
-            - kubectl apply -f  svc.yaml
+            # - kubectl apply -f  svc.yaml
