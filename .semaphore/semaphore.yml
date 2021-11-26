@@ -22,9 +22,9 @@ blocks:
           - gcloud auth configure-docker -q
           - gcloud container clusters get-credentials "${CLUSTER_US}" --region "${REGION_US}" --project searce-playground
           - checkout
-          - export IMAGE = echo `${SEMAPHORE_GIT_SHA:0:7}`
+          - export IMAGE = `echo ${SEMAPHORE_GIT_SHA:0:7}`
           - echo $IMAGE
-          # - sed -e "s/IMAGE/${IMAGE}/g" deployment.tpl > deployment.yaml  
+          - sed -e "s/IMAGE/${IMAGE}/g" deployment.tpl > deployment.yaml  
       jobs:
          - name: Docker build
            commands:
