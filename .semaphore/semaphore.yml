@@ -8,30 +8,30 @@ blocks:
   - name: "Push Image"
     task:
       secrets:
-       - name: GCP
-      #   - name: KUBECONFIG
+       - name: GKE
       env_vars:
-        # - name: KUBECONFIG
-        #   value: /home/semaphore/.kube/dok8s.yaml
         - name: CLUSTER_US
-          value: nginx-ingres-moogsoft1
+          value: varsha-test-gke
         - name: REGION_US
           value: us-central1
       prologue:
         commands:
           # Authenticate using the file injected from the secret
           - gcloud auth activate-service-account --key-file=.secrets/key.json
-          # # Don't forget -q to silence confirmation prompts
-          # - gcloud auth configure-docker -q
+          # Don't forget -q to silence confirmation prompts
+          - gcloud auth configure-docker -q
           - gcloud container clusters get-credentials "${CLUSTER_US}" --region "${REGION_US}" --project searce-playground
           - checkout
+          - export IMAGE=echo `"${SEMAPHORE_GIT_SHA:0:7}"`
+          - sed -e "s/IMAGE/${IMAGE}/g" deployment.tpl > deployment.yaml
       jobs:
-        # - name: Docker build
-        #   commands:
-        #     # Replace with your GCP Project ID
-        #     - docker build -t "gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}" .
-        #     - docker push "gcr.io/searce-playground/semaphore-example:${SEMAPHORE_GIT_SHA:0:7}"
-        - name: Kubernetes deployment
-          commands:
+         - name: Docker build
+           commands:
+             # Replace with your GCP Project ID
+             - docker build -t "gcr.io/searce-playground/semaphore-trainual:${SEMAPHORE_GIT_SHA:0:7}" .
+             - docker push "gcr.io/searce-playground/semaphore-trainual:${SEMAPHORE_GIT_SHA:0:7}"
+         - name: Kubernetes deployment
+           commands:
+            - kubectl apply -f  ns.yaml
             - kubectl apply -f  deployment.yaml
-
+            - kubectl apply -f  svc.yaml
